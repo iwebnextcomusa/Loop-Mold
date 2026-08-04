@@ -1,0 +1,6 @@
+{
+  "name": "Loop Mold",
+  "description": "Professional 3D Printing & Rapid Prototyping Solutions in Lake Elsinore, California",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
