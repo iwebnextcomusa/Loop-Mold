@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { ActivePage } from '../types';
 import { COMPANY_INFO, HERO_IMAGE } from '../data/companyData';
-import { ArrowRight, ShieldCheck, Zap, MapPin, Sparkles, Layers } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Zap, MapPin, Sparkles, Layers, Volume2, VolumeX } from 'lucide-react';
 
 interface HeroProps {
   setActivePage: (page: ActivePage) => void;
@@ -9,20 +9,61 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ setActivePage, openQuoteModal }) => {
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden bg-[#0f1115] border-b border-white/5">
-      {/* Background Image with Dark Overlay */}
+      {/* Background Video with Dark Overlay */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img
-          src={HERO_IMAGE}
-          alt="3D Printing Hero Background"
-          className="w-full h-full object-cover object-center opacity-25 scale-105 filter brightness-90 contrast-110"
-          referrerPolicy="no-referrer"
-        />
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={HERO_IMAGE}
+          className="w-full h-full object-cover object-center opacity-50 scale-105 filter brightness-100 contrast-110"
+        >
+          <source src="https://ejxfmpvggx2cdvee.public.blob.vercel-storage.com/Create_3D_printing_company_video_202608050110.mp4" type="video/mp4" />
+          <img
+            src={HERO_IMAGE}
+            alt="3D Printing Hero Background"
+            className="w-full h-full object-cover object-center"
+            referrerPolicy="no-referrer"
+          />
+        </video>
         {/* Gradient Overlays for High Legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f1115]/90 via-[#0f1115]/80 to-[#0f1115]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1115] via-transparent to-[#0f1115]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0f1115]/75 via-[#0f1115]/55 to-[#0f1115]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1115]/80 via-transparent to-[#0f1115]/80" />
       </div>
+
+      {/* Mute/Unmute Audio Toggle Button */}
+      <button
+        type="button"
+        onClick={toggleMute}
+        aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+        className="absolute bottom-6 right-6 z-20 p-3 rounded-full bg-[#1a1d23]/80 hover:bg-[#252a33] text-white border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 px-4 group"
+      >
+        {isMuted ? (
+          <>
+            <VolumeX className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
+            <span className="text-xs font-mono font-semibold text-gray-300 uppercase tracking-wider">Unmute Video</span>
+          </>
+        ) : (
+          <>
+            <Volume2 className="w-4 h-4 text-blue-400 animate-pulse" />
+            <span className="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Mute Video</span>
+          </>
+        )}
+      </button>
 
       {/* Background Animated Glow Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none z-0" />
